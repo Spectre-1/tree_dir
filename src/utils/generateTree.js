@@ -9,51 +9,34 @@ const defaultOptions = {
   rootDot: true,
 };
 
-/**
- * Generates an ASCII tree diagram, given a FileStructure
- * @param structure The FileStructure object to convert into ASCII
- * @param options The rendering options
- */
-export const generateTree = (structure, options = defaultOptions) => {
-    const flattenDeep = (arr) => arr.flat(Infinity);
-  
-    return flattenDeep([
-      getAsciiLine(structure, { ...defaultOptions, ...options }, ''),
-      structure.children.map(c => generateTree(c, { ...defaultOptions, ...options }, '  ')),
-    ])
-      .filter(line => line != null)
-      .join('\n');
-  };
-  
-  /**
-   * Returns a line of ASCII that represents
-   * a single FileStructure object
-   * @param structure The file to render
-   * @param options The rendering options
-   * @param prefix The prefix to be used for rendering the current level of the tree
-   */
-  const getAsciiLine = (structure, options, prefix) => {
+export const generateTree = (structure, options = defaultOptions, prefix = '') => {
     const lines = LINE_STRINGS[options.charset];
   
-    if (!structure.parent) {
-      return structure.name;
-    }
+    const result = [getAsciiLine(structure, options, prefix)];
   
-    let linePrefix = prefix;
-    if (structure.parent.parent) {
-      linePrefix += isLastChild(structure.parent) ? lines.EMPTY : lines.DIRECTORY;
-    }
+    structure.children.forEach((child, i, arr) => {
+      const isLast = i === arr.length - 1;
+      const newPrefix = prefix + (isLast ? lines.EMPTY : lines.DIRECTORY);
+      const childTree = generateTree(child, options, newPrefix);
+      result.push(childTree);
+    });
   
-    return linePrefix + (isLastChild(structure) ? lines.LAST_CHILD : lines.CHILD) + structure.name;
+    return result.filter(line => line != null).join('\n');
   };
   
+  
+  const getAsciiLine = (structure, options, prefix = '') => {
+    const lines = LINE_STRINGS[options.charset];
+    const linePrefix = prefix;
+    const lineChild = isLastChild(structure) ? lines.LAST_CHILD : lines.CHILD;
+  
+    if (structure.parent) {
+      return linePrefix + lineChild + structure.name;
+    }
+  
+    return structure.name;
+  };
 
-/**
- * Returns the name of a file or folder according to the
- * rules specified by the rendering rules
- * @param structure The file or folder to get the name of
- * @param options The rendering options
- */
 const getName = (structure, options) => {
   const nameChunks = [structure.name];
 
@@ -65,7 +48,7 @@ const getName = (structure, options) => {
     nameChunks.push('/');
   }
 
-  if (options.fullPath && structure.parent && structure.parent) {
+  if (options.fullPath && structure.parent) {
     nameChunks.unshift(
       getName({
         ...structure.parent,
@@ -77,11 +60,6 @@ const getName = (structure, options) => {
   return nameChunks.join('');
 };
 
-/**
- * A utility function do determine if a file or folder
- * is the last child of its parent
- * @param structure The file or folder to test
- */
 const isLastChild = (structure) => {
   return Boolean(structure.parent && last(structure.parent.children) === structure);
 };
