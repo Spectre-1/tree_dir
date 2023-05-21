@@ -1,15 +1,8 @@
-export const LINE_STRINGS = {
-    "ascii": {
-      "CHILD": "|-- ",
-      "LAST_CHILD": "`-- ",
-      "DIRECTORY": "|   ",
-      "EMPTY": "    "
-    },
-    "utf-8": {
-      "CHILD": "├── ",
-      "LAST_CHILD": "└── ",
-      "DIRECTORY": "│   ",
-      "EMPTY": "    "
-    }
-  };
-  
+module.exports = {
+  'utf-8': {
+    'DIRECTORY': '|   ',
+    'EMPTY': '    ',
+    'CHILD': '├── ',
+    'LAST_CHILD': '└── '
+  }
+};

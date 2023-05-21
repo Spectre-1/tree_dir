@@ -1,65 +1,54 @@
-import { last } from 'lodash';
-import { LINE_STRINGS } from './line-strings';
+const LINE_STRINGS = require('./line-strings');
 
-/** The default options if no options are provided */
 const defaultOptions = {
-  charset: 'ascii',
+  charset: 'utf-8',
   trailingDirSlash: false,
   fullPath: false,
   rootDot: true,
 };
 
 export const generateTree = (structure, options = defaultOptions, prefix = '') => {
-    const lines = LINE_STRINGS[options.charset];
-  
-    const result = [getAsciiLine(structure, options, prefix)];
-  
-    structure.children.forEach((child, i, arr) => {
-      const isLast = i === arr.length - 1;
-      const newPrefix = prefix + (isLast ? lines.EMPTY : lines.DIRECTORY);
-      const childTree = generateTree(child, options, newPrefix);
-      result.push(childTree);
-    });
-  
-    return result.filter(line => line != null).join('\n');
-  };
-  
-  
-  const getAsciiLine = (structure, options, prefix = '') => {
-    const lines = LINE_STRINGS[options.charset];
-    const linePrefix = prefix;
-    const lineChild = isLastChild(structure) ? lines.LAST_CHILD : lines.CHILD;
-  
-    if (structure.parent) {
-      return linePrefix + lineChild + structure.name;
-    }
-  
-    return structure.name;
-  };
+  const lines = LINE_STRINGS[options.charset];
 
-const getName = (structure, options) => {
-  const nameChunks = [structure.name];
+  let result = [getAsciiLine(structure, options, prefix)];
 
-  if (
-    options.trailingDirSlash &&
-    structure.children.length > 0 &&
-    !/\/\s*$/.test(structure.name)
-  ) {
-    nameChunks.push('/');
+  structure.children.forEach((child, i, arr) => {
+    // Determine if this node is the last child of its parent
+    const isLast = i === arr.length - 1;
+
+    // The new prefix for children should include the DIRECTORY character,
+    // unless this node is the last child of its parent, in which case it should include the EMPTY character.
+    const newPrefix = prefix + (isLast ? lines.EMPTY : lines.DIRECTORY);
+
+    const childOutput = generateTree(child, options, newPrefix);
+    result = result.concat(childOutput);
+  });
+
+  return result.filter(line => line != null).join('\n');
+};
+
+const getAsciiLine = (structure, options, prefix = '') => {
+  const lines = LINE_STRINGS[options.charset];
+  let linePrefix = prefix;
+
+  // If the node has a parent, it's not the root
+  if (structure.parent) {
+    // Determine if this node is the last child of its parent
+    const isLast = isLastChild(structure);
+
+    // The line prefix for children should include the CHILD or LAST_CHILD character,
+    // depending on whether this node is the last child of its parent.
+    linePrefix += isLast ? lines.LAST_CHILD : lines.CHILD;
   }
 
-  if (options.fullPath && structure.parent) {
-    nameChunks.unshift(
-      getName({
-        ...structure.parent,
-        trailingDirSlash: true,
-      }, options),
-    );
-  }
+  // Node name is just the structure's name
+  const nodeName = structure.name;
 
-  return nameChunks.join('');
+  return linePrefix + nodeName;
 };
 
 const isLastChild = (structure) => {
-  return Boolean(structure.parent && last(structure.parent.children) === structure);
+  return Boolean(structure.parent && structure.parent.children.slice(-1)[0] === structure);
 };
+
+export default generateTree;
