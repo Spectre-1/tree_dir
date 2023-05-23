@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import 'tailwindcss/tailwind.css';
+import '../tailwind.css';
 
 const InputComponent = () => {
   const [inputValue, setInputValue] = useState('');
@@ -32,7 +32,6 @@ const InputComponent = () => {
 
   return (
     <div className="Input-container">
-      <h2 className="notepad-title">Notepad Lite</h2>
       <form onSubmit={handleSubmit}>
         <textarea
           className="input"
