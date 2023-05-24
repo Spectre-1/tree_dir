@@ -17,6 +17,12 @@ module.exports = {
         sans: ['Raleway', 'sans-serif'],
         opensans: ['Open Sans', 'sans-serif']
       },
+      flex: {
+        'footer': '1 0 auto',
+      },
+      minHeight: {
+        'screen-footer': 'calc(100vh - 80px)', // Adjust the value as needed based on your header height
+      },
       backgroundImage: (theme) => ({
      //TBA
       }),

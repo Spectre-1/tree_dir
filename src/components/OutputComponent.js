@@ -1,38 +1,27 @@
-import React, { useState } from 'react';
 
-const OutputComponent = () => {
-  const [inputValue, setInputValue] = useState('');
+import React, { useState, useEffect } from 'react';
+
+const generateOutput = (input) => {
+  // Implement your logic to generate the output based on the input
+  return `Output: ${input}`;
+};
+
+const OutputComponent = ({ inputValue }) => {
   const [outputValue, setOutputValue] = useState('');
 
-  const handleChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle the submitted input value and generate the output
+  useEffect(() => {
     const output = generateOutput(inputValue);
     setOutputValue(output);
-    // Reset the input value
-    setInputValue('');
-  };
-
-  const generateOutput = (input) => {
-    // Implement your logic to generate the output based on the input
-    // Example: You can manipulate the input string or perform calculations
-    return `Output: ${input}`;
-  };
+  }, [inputValue]);
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Input:
-          <input type="text" value={inputValue} onChange={handleChange} />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
-      <p>{outputValue}</p>
+    <div className="Input-container">
+      <textarea
+        className="input"
+        value={outputValue}
+        rows={10}
+        readOnly
+      ></textarea>
     </div>
   );
 };

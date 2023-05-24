@@ -1,19 +1,18 @@
-import './App.css';
 
 import InputComponent from './components/InputComponent';
 import OutputComponent from './components/OutputComponent';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 const App = () => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <div style={{ flex: 1, padding: '1rem' }}>
+    <div>
+        <Header />
         <h1>Input Component Example</h1>
         <InputComponent />
-      </div>
-      <div style={{ flex: 1, padding: '1rem' }}>
         <h1>Output Component Example</h1>
         <OutputComponent />
-      </div>
+        <Footer />
     </div>
   );
 };
