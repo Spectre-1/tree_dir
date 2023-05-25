@@ -8,7 +8,7 @@ const Header = () => {
     return (
       <header className="bg-black text-green-400 p-2 fixed inset-x-0 top-0">
         <div className="flex items-center padding">
-          <h1 className="text-md md:text-xl">Tree!</h1>
+          <h1 className="text-md md:text-xl">Treeify!</h1>
           <a href="https://github.com" 
              target="_blank" 
              rel="noopener noreferrer" 
