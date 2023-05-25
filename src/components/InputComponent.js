@@ -1,17 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {  } from 'react';
 import '../tailwind.css';
 
 const InputComponent = ({ inputValue, setInputValue }) => {
-  const [containerHeight, setContainerHeight] = useState(0);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      const { height } = containerRef.current.parentElement.getBoundingClientRect();
-      setContainerHeight(height);
-    }
-  }, []);
-
   const handleChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -35,10 +25,10 @@ const InputComponent = ({ inputValue, setInputValue }) => {
   };
 
   return (
-    <div className="flex flex-col bg-gray-800 w-full md:w-1/2 border-2 border-green-400 mx-5 overflow-auto">
-      <form className="flex flex-col h-full" onSubmit={handleSubmit}>
+    <div className="flex flex-col bg-gray-800 w-full md:w-1/2 border-4 border-green-400 mx-5 overflow-auto">
+      <form className="h-full" onSubmit={handleSubmit}>
         <textarea
-          className="flex-grow input text-3xl" // Increase the font size here
+          className="w-full h-full text-3xl outline-none resize-none p-0 m-0 min-h-[500px]" // Set width and height to 100%, remove outline, resize, padding, and margin
           value={inputValue}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
