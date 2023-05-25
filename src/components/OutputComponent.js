@@ -15,7 +15,7 @@ const OutputComponent = ({ inputValue }) => {
   }, [inputValue]);
 
   return (
-    <div className="Input-container">
+    <div className="Output-container">
       <textarea
         className="input"
         value={outputValue}

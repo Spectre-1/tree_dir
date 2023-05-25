@@ -7,7 +7,7 @@ const Header = (props) => {
 
   return (
     <Fragment>
-      <header className="header">
+      <header className="header" >
         <h1>{title}</h1>
       </header>
       {/* <div>
