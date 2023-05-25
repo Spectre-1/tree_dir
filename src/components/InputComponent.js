@@ -25,10 +25,10 @@ const InputComponent = ({ inputValue, setInputValue }) => {
   };
 
   return (
-    <div className="flex flex-col bg-gray-800 w-full md:w-1/2 border-4 border-green-400 mx-5 overflow-auto">
+    <div className="flex flex-col bg-gray-800 w-full md:w-1/2  mx-5 overflow-auto">
       <form className="h-full" onSubmit={handleSubmit}>
         <textarea
-          className="w-full h-full text-3xl outline-none resize-none p-0 m-0 min-h-[500px]" // Set width and height to 100%, remove outline, resize, padding, and margin
+          className="w-full h-full text-3xl outline-none resize-none border-4 border-green-400 p-0 m-0 min-h-[500px]" // Set width and height to 100%, remove outline, resize, padding, and margin
           value={inputValue}
           onChange={handleChange}
           onKeyDown={handleKeyDown}

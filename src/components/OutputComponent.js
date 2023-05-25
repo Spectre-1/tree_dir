@@ -13,10 +13,10 @@ const OutputComponent = ({ inputValue }) => {
   }, [containerRef.current]);
 
   return (
-    <div className="flex flex-col bg-gray-800 w-full md:w-1/2 border-4 border-green-400 mx-5 overflow-auto">
+    <div className="flex flex-col bg-gray-800 w-full md:w-1/2  mx-5 overflow-auto">
       <form className="h-full"> 
         <textarea
-          className="w-full h-full text-3xl outline-none min-h-[500px]"
+          className="w-full h-full border-4 border-green-400 text-3xl outline-none min-h-[500px]"
           value={inputValue}
         ></textarea>
       </form>
