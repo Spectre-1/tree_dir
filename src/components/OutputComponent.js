@@ -1,27 +1,39 @@
-
-import React, { useState, useEffect } from 'react';
-
-const generateOutput = (input) => {
-  return `Output: ${input}`;
-};
+import React, { useState, useRef, useEffect } from 'react';
+import '../tailwind.css';
 
 const OutputComponent = ({ inputValue }) => {
+  const [containerHeight, setContainerHeight] = useState(0);
+  const containerRef = useRef(null);
   const [outputValue, setOutputValue] = useState('');
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const { height } = containerRef.current.parentElement.getBoundingClientRect();
+      setContainerHeight(height);
+    }
+  }, []);
 
   useEffect(() => {
     const output = generateOutput(inputValue);
     setOutputValue(output);
   }, [inputValue]);
 
+  const generateOutput = (input) => {
+    return `${input}`;
+  };
+
   return (
-    <div className="flex flex-col h-full w-1/2 bg-gray-800 border-2 border-green-400 m-2">
+    <div
+      ref={containerRef}
+      className="flex flex-col bg-gray-800 w-full md:w-1/2 border-2 border-green-400 m-auto mx-5"
+      style={{ height: containerHeight }}
+    >
       <form className="flex flex-col h-full">
         <textarea
-          className="flex-grow input"
-          value={inputValue}
-          placeholder={`Edit me to generate a tree!\n\u0009Use tab to indent!`}
+          className="flex-grow input text-3xl" // Increase the font size here
+          value={outputValue}
+          readOnly
         ></textarea>
-        <button className="mt-4 notepad-button" type="submit">Save</button>
       </form>
     </div>
   );
