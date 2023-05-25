@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import '../tailwind.css';
 
-const InputComponent = () => {
-  const [inputValue, setInputValue] = useState('');
-
+const InputComponent = ({ inputValue, setInputValue }) => {
+  
   const handleChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -22,26 +21,21 @@ const InputComponent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle the submitted input value
-    // You can perform any necessary actions or validations here
-    // For example, you can pass the input value to a function or make an API call
     console.log(inputValue);
-    // Reset the input value
     setInputValue('');
   };
 
   return (
-    <div className="Input-container">
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col h-full w-1/2 bg-gray-800 border-2 border-green-400 m-2">
+      <form className="flex flex-col h-full" onSubmit={handleSubmit}>
         <textarea
-          className="input"
+          className="flex-grow input"
           value={inputValue}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder={`Edit me to generate a tree!\n\u0009Use tab to indent!`}
-          rows={10}
         ></textarea>
-        <button className="notepad-button" type="submit">Save</button>
+        <button className="mt-4 notepad-button" type="submit">Save</button>
       </form>
     </div>
   );
