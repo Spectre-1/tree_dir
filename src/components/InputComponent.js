@@ -35,11 +35,7 @@ const InputComponent = ({ inputValue, setInputValue }) => {
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col bg-gray-800 w-full md:w-1/2 border-2 border-green-400 m-auto mx-5"
-      style={{ height: containerHeight }}
-    >
+    <div className="flex flex-col bg-gray-800 w-full md:w-1/2 border-2 border-green-400 mx-5 overflow-auto">
       <form className="flex flex-col h-full" onSubmit={handleSubmit}>
         <textarea
           className="flex-grow input text-3xl" // Increase the font size here
