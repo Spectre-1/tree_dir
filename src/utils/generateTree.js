@@ -7,18 +7,23 @@ const defaultOptions = {
   rootDot: true,
 };
 
-export const generateTree = (structure, prefix = '') => {
-  let result = [getAsciiLine(structure, prefix)];
+export const generateTree = (node, indent = '') => {
+  const isDirectory = node.children && node.children.length > 0;
+  const nodeName = isDirectory ? node.name + '/' : node.name;
+
+  const lines = [indent + LINE_STRINGS['utf-8'].LAST_CHILD + nodeName];
   
-  structure.children.forEach((child, i, arr) => {
-    const isLast = i === arr.length - 1;
-    const newPrefix = prefix + (isLast ? LINE_STRINGS['utf-8'].EMPTY : LINE_STRINGS['utf-8'].DIRECTORY);
+  for (let i = 0; i < node.children.length; i++) {
+    const child = node.children[i];
+    const isLast = i === node.children.length - 1;
+    
+    const newIndent = indent + (isLast ? LINE_STRINGS['utf-8'].DIRECTORY : LINE_STRINGS['utf-8'].CHILD);
+    
+    const childLines = generateTree(child, newIndent);
+    lines.push(...childLines);
+  }
 
-    const childOutput = generateTree(child, newPrefix);
-    result = result.concat(childOutput);
-  });
-
-  return result.filter(line => line !== null).join('\n');
+  return lines.join('\n'); // join the lines by newlines before returning
 };
 
 const getAsciiLine = (structure, prefix) => {

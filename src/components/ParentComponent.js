@@ -6,10 +6,10 @@ import { generateTree } from '../utils/generateTree'; // Corrected path
 function stringToStructure(input) {
   let lines = input.split('\n');
   let root = { name: '.', children: [] };
-  let currentNodes = [root]; // Root node at depth 0
+  let currentNodes = {0: root}; // Root node at depth 0
 
   for (let line of lines) {
-    let depth = Math.floor(line.search(/\S/) / 2); // Find the first non-space character and divide by 2
+    let depth = line.search(/\S|$/) / 2; // Find the first non-space character and divide by 2, for 0-based index
     let name = line.trim();
 
     if (name.length > 0) { // Ignore blank lines
