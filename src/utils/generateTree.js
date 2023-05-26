@@ -7,29 +7,42 @@ const defaultOptions = {
   rootDot: true,
 };
 
-export const generateTree = (node, indent = '') => {
-  const isDirectory = node.children && node.children.length > 0;
-  const nodeName = isDirectory ? node.name + '/' : node.name;
+export const generateTree = (structure, options = defaultOptions, prefix = '') => {
+  const lines = LINE_STRINGS[options.charset];
 
-  const lines = [indent + LINE_STRINGS['utf-8'].LAST_CHILD + nodeName];
-  
-  for (let i = 0; i < node.children.length; i++) {
-    const child = node.children[i];
-    const isLast = i === node.children.length - 1;
-    
-    const newIndent = indent + (isLast ? LINE_STRINGS['utf-8'].DIRECTORY : LINE_STRINGS['utf-8'].CHILD);
-    
-    const childLines = generateTree(child, newIndent);
-    lines.push(...childLines);
-  }
+  let result = [getAsciiLine(structure, options, prefix)];
 
-  return lines.join('\n'); // join the lines by newlines before returning
+  structure.children.forEach((child, i, arr) => {
+    // Determine if this node is the last child of its parent
+    const isLast = i === arr.length - 1;
+
+    // The new prefix for children should include the DIRECTORY character,
+    // unless this node is the last child of its parent, in which case it should include the EMPTY character.
+    const newPrefix = prefix + (isLast ? lines.EMPTY : lines.DIRECTORY);
+
+    const childOutput = generateTree(child, options, newPrefix);
+    result = result.concat(childOutput);
+  });
+
+  return result.filter(line => line != null).join('\n');
 };
 
-const getAsciiLine = (structure, prefix) => {
-  const isLast = isLastChild(structure);
-  const linePrefix = prefix + (isLast ? LINE_STRINGS['utf-8'].LAST_CHILD : LINE_STRINGS['utf-8'].CHILD);
-  const nodeName = structure.children.length > 0 ? structure.name + '/' : structure.name; // Append '/' for directories
+const getAsciiLine = (structure, options, prefix = '') => {
+  const lines = LINE_STRINGS[options.charset];
+  let linePrefix = prefix;
+
+  // If the node has a parent, it's not the root
+  if (structure.parent) {
+    // Determine if this node is the last child of its parent
+    const isLast = isLastChild(structure);
+
+    // The line prefix for children should include the CHILD or LAST_CHILD character,
+    // depending on whether this node is the last child of its parent.
+    linePrefix += isLast ? lines.LAST_CHILD : lines.CHILD;
+  }
+
+  // Node name is just the structure's name
+  const nodeName = structure.name;
 
   return linePrefix + nodeName;
 };
